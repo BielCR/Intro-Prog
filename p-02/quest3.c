@@ -1,6 +1,7 @@
 //Gabriel Cezar Rodrigues 21.1.4157 turma 41
 
 #include <stdio.h>
+#include <stdlib.h>
 
 //definindo a variavel global
 char letra = 'a';
