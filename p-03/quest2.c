@@ -8,7 +8,7 @@ Turma: 41*/
 
 int calculaRaizes(float a, float b, float c, float *raiz1, float *raiz2);
 
-void main(){
+int main(){
     float a, b, c, raiz1, raiz2;
     printf("Digite o valor de a, b e c nessa mesma ordem: ");
     scanf("\n%f", &a);
@@ -22,6 +22,7 @@ void main(){
     }else{
         printf("A equacao nao tem raizes reais.");
     }
+    return 0;
 }
 
 int calculaRaizes(float a, float b, float c, float *raiz1, float *raiz2){
