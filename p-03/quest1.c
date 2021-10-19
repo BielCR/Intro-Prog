@@ -6,7 +6,7 @@ Turma: 41*/
 
 void converterCelsius(float celcius, float *fahrenheit, float *kelvin);
 
-void main(){
+int main(){
     float celcius, fahrenheit, kelvin;
     printf("Digite o valor da temperatura em Celsius: ");
     scanf("%f", &celcius);
@@ -15,6 +15,7 @@ void main(){
 
     printf("\n%.2f Graus Celsius equivale a %.2f graus Fahrenheit.", celcius, fahrenheit);
     printf("\n%.2f Graus Celsius equivale a %.2f graus Kelvin.", celcius, kelvin);
+    return 0;
 }
 
 void converterCelsius(float c, float *f, float *k){

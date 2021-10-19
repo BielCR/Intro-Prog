@@ -5,24 +5,26 @@ Turma: 41*/
 #include <stdio.h>
 #include <math.h>
 
-int calculaDuracao(int *horaI, int *minutoI, int *horaT, int *minutoT);
+void calculaDuracao(int horaI, int minutoI, int horaT, int minutoT, int *duracao);
 
-void main(){
+int main(){
     int horaI, minutoI, horaT, minutoT, duracao;
     printf("Digite a hora e os minutos em que o jogo iniciou: ");
-    scanf("%d", &horaI);
-    scanf("%d", &minutoI);
+    scanf("%d %d", &horaI, &minutoI);
     
     printf("Digite a hora e os minutos em que o jogo finalzou: ");
-    scanf("%d", &horaT);
-    scanf("%d", &minutoT);
+    scanf("%d %d", &horaT, &minutoT);
+    calculaDuracao(horaI, minutoI, horaT, minutoT, &duracao);
 
-    printf("O jogo durou %d minutos.", calculaDuracao(&horaI, &minutoI, &horaT, &minutoT));
+    printf("O jogo durou %d minutos.", duracao);
+    return 0;
 }
 
-int calculaDuracao(int *horaI, int *minutoI, int *horaT, int *minutoT){
-    int horaIMinutos = (*horaI * 60) + *minutoI;
-    int horaTMinutos = (*horaT * 60) + *minutoT;
-    int resultado = horaTMinutos - horaIMinutos;
-    return resultado;
+void calculaDuracao(int horaI, int minutoI, int horaT, int minutoT, int *duracao){
+    int horaIMinutos = (horaI * 60) + minutoI;
+    int horaTMinutos = (horaT * 60) + minutoT;
+    *duracao = horaTMinutos - horaIMinutos;
+    if(*duracao < 0){
+        *duracao += 1440;
+    }
 }
