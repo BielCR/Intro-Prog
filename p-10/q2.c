@@ -38,7 +38,7 @@ Complexo multComplexo(Complexo x, Complexo y){
 }
 
 void imprime(Complexo final){
-    printf("Resultado = %.2f", (final.real + final.imaginario * i));
+    printf("Resultado = %.2lf", (final.real + final.imaginario * i));
 }
 
 int main()
