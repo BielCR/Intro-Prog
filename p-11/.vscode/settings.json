@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "quest1.C": "cpp",
+        "q1.C": "cpp",
+        "q2.C": "cpp",
+        "q2 copy.C": "cpp",
+        "q3.C": "cpp",
+        "q3 copy.C": "cpp",
+        "q4.C": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
