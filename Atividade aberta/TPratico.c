@@ -48,7 +48,7 @@ void instrucoes(){
 int main()
 {
     int escolha, dificuldade;
-    char *nome;
+    char *nome, *nivelStr;
     FILE *arq;
     
     do{
@@ -60,17 +60,20 @@ int main()
                 size_t len = strlen(nome);
                 if(nome[len - 1] == '\n')
                     nome[len - 1] == '\0';
-            
-                char *nivelStr;
+                printf("%s", nome);
+
                 printf("Digite o nivel de dificuldade facil (1), medio (2) ou dificil (3).: ");
 
-                fgets(nivelStr, 5, stdin);
+                scanf("%s", nome);
                 len = strlen(nivelStr);
-                if(nivelStr[len - 1] == '\n')
-                    NivelStr[len - 1] == '\0';
+                 if(nivelStr[len - 1] == '\n')
+                    nivelStr[len - 1] == '\0';
+                printf("\nNivel aqui ó%s", nivelStr);
                 if(strcmp(nivelStr, "sair") == 0)
                     finaliza();
                  dificuldade = (nivelStr[0] - '0');
+
+                 break;
                 
             case 2:
                 continuar(nome);
