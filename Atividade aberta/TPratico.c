@@ -25,33 +25,16 @@ int inicio(){
     return (escolha[0] - '0');
 }
 
-//solicita nome do nomeuivo
-char *solicitaNome(){
-    char nome[60];
-    printf("Digite o nome do arquivo com as palavras: ");
-    scanf("%s", nome);
-    printf("%s", nome);
-    if(strcmp(nome, "sair") == 0)
-        finaliza();
-    return nome[0];
+//solicita nome do nome do arquivo
+void solicitaNome(char * nome){
+   
 }
 
 //comecar novo jogo
-void comecar(char *nome, int *nivel){
-    *nome = solicitaNome();
-    printf("%s", *nome);
-    char nivelStr[5];
 
-    printf("Digite o nivel de dificuldade facil (1), medio (2) ou dificil (3).: ");
-    scanf("%s",nivelStr);
-    if(strcmp(nivelStr, "sair") == 0)
-        finaliza();
-    
-    nivel = (nivelStr[0] - '0');
-}
 
 void continuar(char *nome){
-    *nome = solicitaNome();
+    //*nome = solicitaNome();
 
 }
 
@@ -72,8 +55,23 @@ int main()
         escolha = inicio();
         switch (escolha){
             case 1:
-                comecar(nome, &dificuldade);
-                break;
+                printf("Digite o nome do arquivo com as palavras: ");
+                fgets(nome, 51, stdin);
+                size_t len = strlen(nome);
+                if(nome[len - 1] == '\n')
+                    nome[len - 1] == '\0';
+            
+                char *nivelStr;
+                printf("Digite o nivel de dificuldade facil (1), medio (2) ou dificil (3).: ");
+
+                fgets(nivelStr, 5, stdin);
+                len = strlen(nivelStr);
+                if(nivelStr[len - 1] == '\n')
+                    NivelStr[len - 1] == '\0';
+                if(strcmp(nivelStr, "sair") == 0)
+                    finaliza();
+                 dificuldade = (nivelStr[0] - '0');
+                
             case 2:
                 continuar(nome);
                 break;
@@ -86,7 +84,7 @@ int main()
         }
     }while(escolha != 1 && escolha != 2);
 
-    printf("%s", nome);
+    printf("%s dentro do main", nome);
     arq = fopen(nome, "rt");
     int n = 0, m = 0, quantPalavras = 0;
 
