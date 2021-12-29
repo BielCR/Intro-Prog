@@ -48,31 +48,25 @@ void instrucoes(){
 int main()
 {
     int escolha, dificuldade;
-    char *nome, *nivelStr;
-    FILE *arq;
+    char nome[100], nivelStr[10];
     
     do{
         escolha = inicio();
         switch (escolha){
             case 1:
                 printf("Digite o nome do arquivo com as palavras: ");
-                fgets(nome, 51, stdin);
-                size_t len = strlen(nome);
-                if(nome[len - 1] == '\n')
-                    nome[len - 1] == '\0';
+                fgets(nome, 99, stdin);
                 printf("%s", nome);
+                if(strcmp(nome, "sair") == 0)
+                    finaliza();
 
                 printf("Digite o nivel de dificuldade facil (1), medio (2) ou dificil (3).: ");
-
-                scanf("%s", nome);
-                len = strlen(nivelStr);
-                 if(nivelStr[len - 1] == '\n')
-                    nivelStr[len - 1] == '\0';
-                printf("\nNivel aqui ó%s", nivelStr);
+                fgets(nivelStr, 9, stdin);
                 if(strcmp(nivelStr, "sair") == 0)
                     finaliza();
-                 dificuldade = (nivelStr[0] - '0');
-
+                
+                dificuldade = (nivelStr[0] - '0');
+                printf("\nNivel aqui o: %d", dificuldade);
                  break;
                 
             case 2:
@@ -87,26 +81,23 @@ int main()
         }
     }while(escolha != 1 && escolha != 2);
 
-    printf("%s dentro do main", nome);
-    arq = fopen(nome, "rt");
+    FILE *arq = fopen(nome, "r");
     int n = 0, m = 0, quantPalavras = 0;
-
+    char matriz[50];
     if(escolha == 1){
-        fscanf(arq, "%d %d\n%d", &n, &m, &quantPalavras);
-        char *palavras = malloc(quantPalavras + 2);
+        fscanf(arq,  "%d %d\n%d", &n, &m, &quantPalavras);
+        char **palavras = malloc(quantPalavras + 2);
         int i = 2;
+        printf("\n\nN: %d\nM: %d\nQuant: %d", n, m, quantPalavras);
 
-        printf("N: %d\nM: %d\nQuant: %d", n, m, quantPalavras);
 
-/*
+
         while(i < quantPalavras){
             fgets(&palavras[i], sizeof palavras[i], arq);
             printf("%s", palavras[i]);
             i++;
-        }
-  */      
+        }      
         
-
     }
 
     return 0;
