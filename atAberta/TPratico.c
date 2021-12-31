@@ -136,47 +136,48 @@ int main()
                 verificadorUsado = 0;
                 linhaUsada[i][0] = -5; //inicializando com valores aletorios a linha inicial.
                 colunaUsada[i][0] = -5;//inicializando com valores aletorios a coluna inicial.
-                linhaUsada[i][1] = -5; //inicializando com valores aletorios a linha final.
-                colunaUsada[i][1] = -5;//inicializando com valores aletorios a coluna final.
+                linhaUsada[i][1] = 1000; //inicializando com valores aletorios a linha final.
+                colunaUsada[i][1] = 1000;//inicializando com valores aletorios a coluna final.
                 
                 do{//enquanto não achar um espaco, nao muda de palavra
                     
                     orientacao = (rand() % 2); //sorteando 0 ou 1 pra orientação
-                    printf("orientacao: %d\n", orientacao);
+                    printf("\norientacao: %d - %s", orientacao, palavras[i]);
 
                     if (orientacao == 0){ //se orientacao for igual a zero, é horizontal
-                        linha[i][0] = (rand() % n);
-                        coluna[i][0] = (rand() % (m-tamanhoPalavras[i]));//a coluna não deve estar mais proxima da borda do que o tamanho da palavra
-                        
-                        linha[i][1] = linha[i][0];//ultima linha usada pela string
-                        coluna[i][1] = coluna[i][0] + tamanhoPalavras[i]; //ultima coluna usada pela string
-
-
                         for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
                             verificadorUsado = 0;
+                            linha[i][0] = (rand() % n);
+                            coluna[i][0] = (rand() % (m-tamanhoPalavras[i]));//a coluna não deve estar mais proxima da borda do que o tamanho da palavra
+                            
+                            linha[i][1] = linha[i][0];//ultima linha usada pela string
+                            coluna[i][1] = coluna[i][0] + tamanhoPalavras[i]; //ultima coluna usada pela string
 
-                            if(linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1] && coluna[i][0] <= colunaUsada[j][0] && coluna[i][1] >= colunaUsada[j][0]){
+                            //se crusar com uma palvra na vertical
+                            if(linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1] && coluna[i][0] <= colunaUsada[j][0] && coluna[i][1] >= colunaUsada[j][0])
                                     verificadorUsado = 1;
-                                    printf("palvra %s\n", palavras[i]);
-                            }
-
+                                    
+                            
+                            
                             if(linhaUsada[j][0] == linha[i][0]){
 
                                 if(coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1]) //se estiver comecando dentro de alguma palavra usada
-                                    verificadorUsado = 1;
+                                    verificadorUsado = 2;
+                                    
+                                
 
                                 if(coluna[i][1] >= colunaUsada[j][0] && coluna[i][1] <= colunaUsada[j][1]) //se estiver finalizando dentro de alguma palavra usada
-                                    verificadorUsado = 1;
+                                    verificadorUsado = 3;
 
                                 if((m - colunaUsada[j][1]) < (tamanhoPalavras[i] - 1) && colunaUsada[j][0] < (tamanhoPalavras[i] - 1)) //se não tiver espaco depois da coluna ou antes
-                                    verificadorUsado = 1;
+                                    verificadorUsado = 4;
 
                             }
                         
                             if(coluna[i][1] > m)
-                                verificadorUsado = 1;
-
-                            
+                                verificadorUsado = 5;
+            
+                            printf(" - %d\n", verificadorUsado);
                             if (verificadorUsado == 0){
                                 linhaUsada[i][0] = linha[i][0]; // linha usada
                                 linhaUsada[i][1]= linha[i][1]; //linha final eh a mesma
@@ -194,37 +195,40 @@ int main()
 
 
                     if (orientacao == 1){ //se orientacao for igual a 1, é vertical
-                        linha[i][0] = (rand() % (n-tamanhoPalavras[i]));//a linha não deve estar mais proxima da borda do que o tamanho da palavra
-                        coluna[i][0] = (rand() % m);
-                        linha[i][1] = linha[i][0] + tamanhoPalavras[i];//ultima linha usada pela string
-                        coluna[i][1] = coluna[i][0]; //ultima coluna usada pela string
-
-
                         for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
+                            
                             verificadorUsado = 0;
+                            linha[i][0] = (rand() % (n-tamanhoPalavras[i]));//a linha não deve estar mais proxima da borda do que o tamanho da palavra
+                            coluna[i][0] = (rand() % m);
+                            linha[i][1] = linha[i][0] + tamanhoPalavras[i];//ultima linha usada pela string
+                            coluna[i][1] = coluna[i][0]; //ultima coluna usada pela string
 
-                            if(coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1] && linha[i][0] <= linhaUsada[j][0] && linha[i][1] >= linhaUsada[j][0]){
+                            //se cruzar com alguma palavra na horizontal
+                            if(coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1] && linha[i][0] <= linhaUsada[j][0] && linha[i][1] >= linhaUsada[j][0])
                                     verificadorUsado = 1;
-                                    printf("palvra %s\n", palavras[i]);
-                            }
+
 
                             if(colunaUsada[j][0] == coluna[i][0]){
 
                                 if(linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1]) //se estiver comecando dentro de alguma palavra usada
-                                    verificadorUsado = 1;
+                                    verificadorUsado = 2;
+
 
                                 if(linha[i][1] >= linhaUsada[j][0] && linha[i][1] <= linhaUsada[j][1]) //se estiver finalizando dentro de alguma palavra usada
-                                    verificadorUsado = 1;
+                                    verificadorUsado = 3;
+
 
                                 if((n - linhaUsada[j][1]) < (tamanhoPalavras[i] - 1) && linhaUsada[j][0] < (tamanhoPalavras[i] - 1)) //se não tiver espaco depois da coluna ou antes
-                                    verificadorUsado = 1;
+                                    verificadorUsado = 4;
+
                                 
                             }
 
                             if(linha[i][1] > n)
-                                verificadorUsado = 1;
-                        
-                            printf("\n %s - %d",palavras[i], verificadorUsado);
+                                verificadorUsado = 5;
+
+                            printf(" - %d\n", verificadorUsado);
+                            
                             if (verificadorUsado == 0){
                                 linhaUsada[i][0] = linha[i][0]; // linha usada
                                 linhaUsada[i][1]= linha[i][1]; //linha final eh a mesma
@@ -248,9 +252,18 @@ int main()
 
         printf("\n");
 
+    //exibindo a matriz com as palvras
         for (int i = 0; i < n; i++){
+            if(i == 0){ 
+                printf("    ");
+                for (int j = 0; j < m; j++)
+                    printf("%d ", (j+1));
+                printf("\n");
+            }
+            i < 9 ? printf("%d  - ", (i+1)) : printf("%d - ", (i+1));
             for (int j = 0; j < m; j++)
                 printf("%c ", matriz[i][j]);
+
             printf("\n");
         }
         

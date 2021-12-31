@@ -1,7 +1,7 @@
 12 10
 5
-cruzeiro
-campeao
-brasileiro
+casa
+torno
+trem
 zero
-ganhou
+janta
