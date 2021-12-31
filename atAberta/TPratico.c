@@ -6,6 +6,8 @@ BCC201 - introdução a programação
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+
 
 //funcao que fnaliza o programa
 void finaliza(char *string){
@@ -66,6 +68,7 @@ int **fazMatrizInt(int n, int m){
 
 int main()
 {
+    srand ( time(NULL) );
     int escolha, dificuldade;
     char nome[100], nivelStr[10];
     
@@ -151,32 +154,88 @@ int main()
 
                         for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
                             verificadorUsado = 0;
-                            if(linhaUsada[j][0] == linha){
+
+                            if(linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1] && coluna[i][0] <= colunaUsada[j][0] && coluna[i][1] >= colunaUsada[j][0]){
+                                    verificadorUsado = 1;
+                                    printf("palvra %s\n", palavras[i]);
+                            }
+
+                            if(linhaUsada[j][0] == linha[i][0]){
 
                                 if(coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1]) //se estiver comecando dentro de alguma palavra usada
                                     verificadorUsado = 1;
 
                                 if(coluna[i][1] >= colunaUsada[j][0] && coluna[i][1] <= colunaUsada[j][1]) //se estiver finalizando dentro de alguma palavra usada
-                                    verificadorUsado += 10;
+                                    verificadorUsado = 1;
 
-                                /*if((m - colunaUsada[j][1]) < (tamanhoPalavras[i] - 1) && colunaUsada[j][0] < (tamanhoPalavras[i] - 1)){ //se não tiver espaco depois da coluna ou antes
-                                    verificadorUsado += 10;
-                                }else verificadorUsado --;
-                                */
+                                if((m - colunaUsada[j][1]) < (tamanhoPalavras[i] - 1) && colunaUsada[j][0] < (tamanhoPalavras[i] - 1)) //se não tiver espaco depois da coluna ou antes
+                                    verificadorUsado = 1;
+
                             }
-                            if(coluna[i][1] > m){
-                                verificadorUsado += 10;
-                            }else verificadorUsado --;
+                        
+                            if(coluna[i][1] > m)
+                                verificadorUsado = 1;
 
-                        if (verificadorUsado % 10 != 0){
-                                linhaUsada[i][0] = linha; // linha usada
-                                linhaUsada[i][1]= linha; //linha final eh a mesma
-                                colunaUsada[i][0] = coluna; //coluna usada inicial
-                                colunaUsada[i][1] = coluna + tamanhoPalavras[i];  //coluna usada final
+                            
+                            if (verificadorUsado == 0){
+                                linhaUsada[i][0] = linha[i][0]; // linha usada
+                                linhaUsada[i][1]= linha[i][1]; //linha final eh a mesma
+                                colunaUsada[i][0] = coluna[i][0]; //coluna usada inicial
+                                colunaUsada[i][1] = coluna[i][1];  //coluna usada final
 
                                 for(int k = 0; k < tamanhoPalavras[i]; k++)
                                     matriz[linha[i][0]][coluna[i][0] + k] = palavras[i][k];
                                 
+                                break;    
+                            }
+                        }
+                        
+                    }
+
+
+                    if (orientacao == 1){ //se orientacao for igual a 1, é vertical
+                        linha[i][0] = (rand() % (n-tamanhoPalavras[i]));//a linha não deve estar mais proxima da borda do que o tamanho da palavra
+                        coluna[i][0] = (rand() % m);
+                        linha[i][1] = linha[i][0] + tamanhoPalavras[i];//ultima linha usada pela string
+                        coluna[i][1] = coluna[i][0]; //ultima coluna usada pela string
+
+
+                        for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
+                            verificadorUsado = 0;
+
+                            if(coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1] && linha[i][0] <= linhaUsada[j][0] && linha[i][1] >= linhaUsada[j][0]){
+                                    verificadorUsado = 1;
+                                    printf("palvra %s\n", palavras[i]);
+                            }
+
+                            if(colunaUsada[j][0] == coluna[i][0]){
+
+                                if(linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1]) //se estiver comecando dentro de alguma palavra usada
+                                    verificadorUsado = 1;
+
+                                if(linha[i][1] >= linhaUsada[j][0] && linha[i][1] <= linhaUsada[j][1]) //se estiver finalizando dentro de alguma palavra usada
+                                    verificadorUsado = 1;
+
+                                if((n - linhaUsada[j][1]) < (tamanhoPalavras[i] - 1) && linhaUsada[j][0] < (tamanhoPalavras[i] - 1)) //se não tiver espaco depois da coluna ou antes
+                                    verificadorUsado = 1;
+                                
+                            }
+
+                            if(linha[i][1] > n)
+                                verificadorUsado = 1;
+                        
+                            printf("\n %s - %d",palavras[i], verificadorUsado);
+                            if (verificadorUsado == 0){
+                                linhaUsada[i][0] = linha[i][0]; // linha usada
+                                linhaUsada[i][1]= linha[i][1]; //linha final eh a mesma
+                                colunaUsada[i][0] = coluna[i][0]; //coluna usada inicial
+                                colunaUsada[i][1] = coluna[i][1];  //coluna usada final
+
+                                for(int k = 0; k < tamanhoPalavras[i]; k++)
+                                    matriz[linha[i][0]+k][coluna[i][0]] = palavras[i][k];
+                                
+                                break;    
+                            }
                         }
                         
                     }
@@ -186,6 +245,8 @@ int main()
                 }while(verificadorUsado == 1);
             }    
         } 
+
+        printf("\n");
 
         for (int i = 0; i < n; i++){
             for (int j = 0; j < m; j++)
