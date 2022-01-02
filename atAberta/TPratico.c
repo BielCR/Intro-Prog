@@ -12,7 +12,7 @@ BCC201 - introdução a programação
 //funcao que fnaliza o programa
 void finaliza(char *string){
     if(strcmp(string, "sair") == 0){
-        printf("\n\nTchau!");
+        printf("\nTchau!");
         exit(0);
     }
 }
@@ -64,26 +64,33 @@ int **fazMatrizInt(int n, int m){
     return matriz;
 }
 
-void horizontal(char **palavras, int **linha, int**coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int**colunaUsada, char**matriz){
+int horizontal(char **palavras, int **linha, int**coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int**colunaUsada, char**matriz, int dir){
     int verificadorUsado;
     for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
         verificadorUsado = 0;
         linha[i][0] = (rand() % n);
-        coluna[i][0] = (rand() % (m-tamanhoPalavras[i]));//a coluna não deve estar mais proxima da borda do que o tamanho da palavra
+        coluna[i][0] = (rand() % m);//a coluna não deve estar mais proxima da borda do que o tamanho da palavra
         
         linha[i][1] = linha[i][0];//ultima linha usada pela string
-        coluna[i][1] = coluna[i][0] + tamanhoPalavras[i]; //ultima coluna usada pela string
+        
+        if(dir == 1)
+            coluna[i][1] = coluna[i][0] + tamanhoPalavras[i]; //ultima coluna usada pela string para direita
+        else 
+            coluna[i][1] = coluna[i][0] - tamanhoPalavras[i]; //ultima coluna usada pela string para esquerda
+            
 
         //se crusar com uma palvra na vertical
         if(linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1] && coluna[i][0] <= colunaUsada[j][0] && coluna[i][1] >= colunaUsada[j][0])
-                verificadorUsado = 1;
+            verificadorUsado = 1;
         
+        if(coluna[i][0] == colunaUsada[j][0] && linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1])
+            verificadorUsado = 1;
+
+        //se comecar na mesma linha
         if(linhaUsada[j][0] == linha[i][0]){
 
             if(coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1]) //se estiver comecando dentro de alguma palavra usada
                 verificadorUsado = 2;
-                
-            
 
             if(coluna[i][1] >= colunaUsada[j][0] && coluna[i][1] <= colunaUsada[j][1]) //se estiver finalizando dentro de alguma palavra usada
                 verificadorUsado = 3;
@@ -93,7 +100,7 @@ void horizontal(char **palavras, int **linha, int**coluna, int n, int m, int *ta
 
         }
     
-        if(coluna[i][1] > m)
+        if(coluna[i][1] > m || coluna[i][1] < 0)
             verificadorUsado = 5;
 
         printf(" - %d\n", verificadorUsado);
@@ -103,22 +110,32 @@ void horizontal(char **palavras, int **linha, int**coluna, int n, int m, int *ta
             colunaUsada[i][0] = coluna[i][0]; //coluna usada inicial
             colunaUsada[i][1] = coluna[i][1];  //coluna usada final
 
-            for(int k = 0; k < tamanhoPalavras[i]; k++)
-                matriz[linha[i][0]][coluna[i][0] + k] = palavras[i][k];
+            for(int k = 0; k < tamanhoPalavras[i]; k++){
+                if(dir == 1) // se for para direita
+                    matriz[linha[i][0]][coluna[i][0] + k] = palavras[i][k];
+                else 
+                    matriz[linha[i][0]][coluna[i][0] - k] = palavras[i][k];
+                
+            }
             
             break;    
         }
     }
 }
 
-void vertical(char **palavras, int **linha, int**coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int**colunaUsada, char**matriz){
+int vertical(char **palavras, int **linha, int**coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int**colunaUsada, char**matriz, int dir){
     int verificadorUsado;
     for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
                                 
         verificadorUsado = 0;
-        linha[i][0] = (rand() % (n-tamanhoPalavras[i]));//a linha não deve estar mais proxima da borda do que o tamanho da palavra
+        linha[i][0] = (rand() % n);//a linha não deve estar mais proxima da borda do que o tamanho da palavra
         coluna[i][0] = (rand() % m);
-        linha[i][1] = linha[i][0] + tamanhoPalavras[i];//ultima linha usada pela string
+
+        if(dir == 1)
+            linha[i][1] = linha[i][0] + tamanhoPalavras[i];//ultima linha usada pela string
+        else
+            linha[i][1] = linha[i][0] - tamanhoPalavras[i];//ultima linha usada pela string
+
         coluna[i][1] = coluna[i][0]; //ultima coluna usada pela string
 
         //se cruzar com alguma palavra na horizontal
@@ -159,7 +176,7 @@ void vertical(char **palavras, int **linha, int**coluna, int n, int m, int *tama
     }
 }
 
-void diagonal(char **palavras, int **linha, int**coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int**colunaUsada, char**matriz){
+int diagonal(char **palavras, int **linha, int**coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int**colunaUsada, char**matriz, int dir){
     int verificadorUsado;
     for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
                                 
@@ -176,7 +193,7 @@ void diagonal(char **palavras, int **linha, int**coluna, int n, int m, int *tama
         //se cruzar com palavra na vertical
         if(linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1] && coluna[i][0] <= colunaUsada[j][0] && coluna[i][1] >= colunaUsada[j][0])
                 verificadorUsado = 1;
-
+        
 
         if(colunaUsada[j][0] == coluna[i][0]){
 
@@ -292,10 +309,10 @@ int main()
                         printf("\norientacao: %d - %s", orientacao, palavras[i]);
 
                         if (orientacao == 0) //se orientacao for igual a zero, é horizontal
-                            horizontal(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz); 
+                            verificadorUsado = horizontal(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz, 1); 
                             
                         if (orientacao == 1) //se orientacao for igual a 1, é vertical
-                            vertical(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz);
+                            verificadorUsado = vertical(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz, 1);
                         
 
 
@@ -318,13 +335,13 @@ int main()
                         printf("\norientacao: %d - %s", orientacao, palavras[i]);
 
                         if (orientacao == 0) //se orientacao for igual a zero, é horizontal
-                            horizontal(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz); 
+                            verificadorUsado = horizontal(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz, 1); 
                             
                         if (orientacao == 1) //se orientacao for igual a 1, é vertical
-                            vertical(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz);
+                            verificadorUsado = vertical(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz, 1);
                         
                         if(orientacao == 2) //se orientacao for igual a 2, é diagonal
-                            diagonal(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz);
+                            verificadorUsado = diagonal(palavras, linha, coluna, n, m, tamanhoPalavras, i, linhaUsada, colunaUsada, matriz, 1);
 
 
                         
