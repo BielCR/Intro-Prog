@@ -264,21 +264,7 @@ void solicitaNomeArquivo(char *nome){
 }
 
 
-void instrucoes(char **matriz, int n, int m){
-    //exibindo a matriz com as palvras
-        for (int i = 0; i < n; i++){
-            if(i == 0){ 
-                printf("    ");
-                for (int j = 0; j < m; j++)
-                    printf("%d ", (j+1));
-                printf("\n");
-            }
-            i < 9 ? printf("%d  - ", (i+1)) : printf("%d - ", (i+1));
-            for (int j = 0; j < m; j++)
-                printf("%c ", matriz[i][j]);
-
-            printf("\n");
-        }
+void instrucoes(){
     
 }
 
@@ -308,15 +294,15 @@ int horizontal(char **palavras, int **linha, int**coluna, int n, int m, int *tam
     int verificadorUsado;
     for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
         verificadorUsado = 0;
-        linha[i][0] = (rand() % n);
-        coluna[i][0] = (rand() % m);//a coluna não deve estar mais proxima da borda do que o tamanho da palavra
+        linha[i][0] = (rand() % (n-1));
+        coluna[i][0] = (rand() % (m-1));//a coluna não deve estar mais proxima da borda do que o tamanho da palavra
         
         linha[i][1] = linha[i][0];//ultima linha usada pela string
         
         if(dir == 1)
-            coluna[i][1] = coluna[i][0] + tamanhoPalavras[i]; //ultima coluna usada pela string para direita
+            coluna[i][1] = coluna[i][0] + tamanhoPalavras[i] -1; //ultima coluna usada pela string para direita
         else 
-            coluna[i][1] = coluna[i][0] - tamanhoPalavras[i]; //ultima coluna usada pela string para esquerda
+            coluna[i][1] = coluna[i][0] - tamanhoPalavras[i] - 1; //ultima coluna usada pela string para esquerda
             
 
         if(linhaUsada[j][0] <= linha[i][0] && (coluna[i][0] - colunaUsada[j][0]) <= tamanhoPalavras[i])
@@ -373,13 +359,13 @@ int vertical(char **palavras, int **linha, int**coluna, int n, int m, int *taman
     for (int j = 0; j <= i; j++){//verificando se já foi usado a coluna ou a linha
                                 
         verificadorUsado = 0;
-        linha[i][0] = (rand() % n);//a linha não deve estar mais proxima da borda do que o tamanho da palavra
-        coluna[i][0] = (rand() % m);
+        linha[i][0] = (rand() % (n-1));//a linha não deve estar mais proxima da borda do que o tamanho da palavra
+        coluna[i][0] = (rand() % (m-1));
 
         if(dir == 1)
-            linha[i][1] = linha[i][0] + tamanhoPalavras[i];//ultima linha usada pela string
+            linha[i][1] = linha[i][0] + tamanhoPalavras[i] - 1;//ultima linha usada pela string
         else
-            linha[i][1] = linha[i][0] - tamanhoPalavras[i];//ultima linha usada pela string
+            linha[i][1] = linha[i][0] - tamanhoPalavras[i] + 1;//ultima linha usada pela string
 
         coluna[i][1] = coluna[i][0]; //ultima coluna usada pela string
 
@@ -432,11 +418,11 @@ int diagonal(char **palavras, int **linha, int**coluna, int n, int m, int *taman
         linha[i][0] = (rand() % n);//a linha não deve estar mais proxima da borda do que o tamanho da palavra
         coluna[i][0] = (rand() % m);
         if(dir == 1){
-            linha[i][1] = linha[i][0] + tamanhoPalavras[i];//ultima linha usada pela string
-            coluna[i][1] = coluna[i][0] + tamanhoPalavras[i]; //ultima coluna usada pela string
+            linha[i][1] = linha[i][0] + tamanhoPalavras[i] - 1;//ultima linha usada pela string
+            coluna[i][1] = coluna[i][0] + tamanhoPalavras[i] - 1; //ultima coluna usada pela string
         }else{
-            linha[i][1] = linha[i][0] - tamanhoPalavras[i];//ultima linha usada pela string
-            coluna[i][1] = coluna[i][0] - tamanhoPalavras[i]; //ultima coluna usada pela string
+            linha[i][1] = linha[i][0] - tamanhoPalavras[i] + 1;//ultima linha usada pela string
+            coluna[i][1] = coluna[i][0] - tamanhoPalavras[i] + 1; //ultima coluna usada pela string
         }
 
         //se cruzar com alguma palavra na horizontal
@@ -486,11 +472,11 @@ int diagonal(char **palavras, int **linha, int**coluna, int n, int m, int *taman
     }
 }
 
-void exibeMatriz (char **matriz, int **cordInicial, int **cordFinal, int n, int m){
+void exibeMatriz (char **matriz, int **cordInicial, int **cordFinal, int n, int m, int k){
     //exibindo a matriz com as palvras
         for (int i = 0; i < n; i++){
             if(i == 0){ 
-                printf("       ");
+                printf("     ");
                 for (int j = 0; j < m; j++)
                     printf("%d ", (j+1));
                 printf("\n");
@@ -526,7 +512,7 @@ int main()
                 solicitaNomeArquivo(nome);
                 break;
             case 3:
-                instrucoes();
+                //instrucoes();
                 break;
             default:
                 printf("Opcao invalida!");
@@ -536,13 +522,13 @@ int main()
 
     FILE *arq = fopen("dicionario.txt", "r"); //abrindo um arquivo pra leitura
     int n = 0, m = 0, quantPalavras = 0;
-    char **matriz;
+    char **matriz, **palavras;
     int **linhaUsada, **colunaUsada;  
 
 
     if(escolha == 1){ //se for um novo jogo
             fscanf(arq,  "%d %d\n%d\n", &n, &m, &quantPalavras); //lendo as 3 primeiras linhas do dicionario
-            char **palavras = fazMatrizChar(quantPalavras, 100, 1);//criando uma matriz para as palavras
+            palavras = fazMatrizChar(quantPalavras, 100, 1);//criando uma matriz para as palavras
             printf("\n\nN: %d\nM: %d\nQuant: %d\n\n", n, m, quantPalavras);
             int *tamanhoPalavras = malloc(quantPalavras);
 
@@ -667,32 +653,38 @@ int main()
         int **coordFinal = fazMatrizInt(quantPalavras, 2);
         int cont = 0, *verificador = malloc(quantPalavras);
         
-        exibeMatriz(matriz, )
+        exibeMatriz(matriz, coordInicial, coordFinal, n, m);
         do{
             printf("\n\nPara jogar digite os seguinte comandos:\n\n\"marcar\".\n\"salvar jogo.txt\" (digite o nome do arquivo apos o comando para salvar.\n\"resolver\" (exibe as palavras marcadas).\n\"sair\" (para sair do jogo).\n");
             scanf("%s", comando);
             finaliza(comando); //finaliza se for digitado o comando de sair
     
             if(strcmp(comando, "marcar") == 0){ //comando de marcar palavra
+
+                //lendo as posicoes
                 printf("Voce tem %d tentativas!\n", (quantPalavras - cont));
                 printf("Digite a linha e a coluna inicial da palavra. : ");
                 scanf("%d %d", &coordInicial[cont][0], &coordInicial[cont][1]);
                 printf("\nDigite a linha e a coluna final da palavra. : ");
                 scanf("%d %d", &coordFinal[cont][0], &coordFinal[cont][1]);
-                
-                printf("Inicial: %d - %d\n", coordInicial[cont][0], coordInicial[cont][1]);
-                printf("Final: %d - %d\n", coordFinal[cont][0], coordFinal[cont][1]);
+                coordInicial[cont][0]--;
+                coordInicial[cont][1]--;
+                coordFinal[cont][0]--;
+                coordFinal[cont][1]--;
 
+                //verificando se as coordenadas possuem alguma palavra
                 for(int i = 0; i < quantPalavras; i++){
+                   // printf("\n\nInicial: %s\nlinha: %d - %d\ncoluna: %d - %d\n\nFinal:\nlinha: %d - %d\n coluna:%d - %d\n",palavras[i], coordInicial[cont][0], linhaUsada[i][0],coordInicial[cont][1], colunaUsada[i][0], coordFinal[cont][0], linhaUsada[i][1], coordFinal[cont][1], colunaUsada[i][1]);
+                   
                     if(coordInicial[cont][0] == linhaUsada[i][0] && coordInicial[cont][1] == colunaUsada[i][0] && coordFinal[cont][0] == linhaUsada[i][1] && coordFinal[cont][1] == colunaUsada[i][1]){
-                        verificador[cont] = 1; //se acertar alguma palavra, ele salva 1 
+                        exibeMatriz(matriz, coordInicial, coordFinal, n, m, i);
                     }
                     else{
                         printf("Palavra desconhecida!");
                     }
                 }
 
-                cont++
+                cont++;
             }
             
         }while(strcmp(comando, "sair") != 0);
