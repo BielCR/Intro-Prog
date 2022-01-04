@@ -306,15 +306,12 @@ int **fazMatrizInt(int n, int m)
     return matriz;
 }
 
-int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int **colunaUsada, char **matriz, int dir)
-{
+int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int **colunaUsada, char **matriz, int dir){
     int verificadorUsado;
-    for (int j = 0; j <= i; j++)
-    { // verificando se já foi usado a coluna ou a linha
+    for (int j = 0; j <= i; j++){
         verificadorUsado = 0;
         linha[i][0] = (rand() % n);
         coluna[i][0] = (rand() % m); // a coluna não deve estar mais proxima da borda do que o tamanho da palavra
-
         linha[i][1] = linha[i][0]; // ultima linha usada pela string
         if (dir == 1)
             coluna[i][1] = coluna[i][0] + tamanhoPalavras[i] - 1; // ultima coluna usada pela string para direita
@@ -323,6 +320,35 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
 
         if (linhaUsada[j][0] <= linha[i][0] && (coluna[i][0] - colunaUsada[j][0]) <= tamanhoPalavras[i])
             verificadorUsado = 7;
+
+
+        for (int k = coluna[i][0]; k <= coluna[i][1]; k++){//varrendo todas as colunas que a palavra ira ocupar com as cordenadas sorteadas
+            for(int p = colunaUsada[j][0]; p <= colunaUsada[j][1]; p++){//varrendo todas as colunas que a palavra ja implementada "j" ocupa
+
+                if(linhaUsada[j][0] == linhaUsada[j][1]){ //se a palavra ja implementada estiver na posição horizontal
+                    if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0] == linhaUsada[j][0]){ //se a coluna sorteada for igual a coluna usada e a linha tammbem 
+                        verificadorUsado == 1; //atribui um numero aleatorio para a variavel verificadora
+                        printf("caiu na regra nova\n");
+                    }
+                }else if(colunaUsada[j][0] == colunaUsada[j][1]){ //se a palavra ja implementada estiver na posição vertical
+                    for(int s = linhaUsada[j][0]; s <= linhaUsada[j][1]; s++){ 
+                        if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0] == linhaUsada[j][0]+s){
+                            verificadorUsado == 1;
+                            printf("caiu na regra nova\n");
+                        }
+                    }
+                }else{//se a palavra ja implementada estiver na posição diagonal
+                    for(int s = linhaUsada[j][0]; s <= linhaUsada[j][1]; s++){ //varrendo todas as linhas já implementadas
+                        for(int t = linha[i][0]; t <= linha[i][1]; t++){ //varrendo as linhas da palavra
+                            if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0]+t == linhaUsada[j][0]+s){
+                                verificadorUsado == 1;
+                                printf("caiu na regra nova\n");
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // se crusar com uma palvra na vertical
         if (linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1] && coluna[i][0] <= colunaUsada[j][0] && coluna[i][1] >= colunaUsada[j][0])
@@ -336,21 +362,22 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
         {
 
             if (coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1]) // se estiver comecando dentro de alguma palavra usada
-                verificadorUsado = 2;
+                verificadorUsado = 1;
 
             if (coluna[i][1] >= colunaUsada[j][0] && coluna[i][1] <= colunaUsada[j][1]) // se estiver finalizando dentro de alguma palavra usada
-                verificadorUsado = 3;
+                verificadorUsado = 1;
 
             if ((m - colunaUsada[j][1]) < (tamanhoPalavras[i] - 1) && colunaUsada[j][0] < (tamanhoPalavras[i] - 1)) // se não tiver espaco depois da coluna ou antes
-                verificadorUsado = 4;
+                verificadorUsado = 1;
             if (coluna[i][0] <= colunaUsada[j][0] && coluna[i][1] >= colunaUsada[j][0])
-                verificadorUsado = 9;
+                verificadorUsado = 1;
         }
 
-        if (coluna[i][1] > m || coluna[i][1] < 0)
-            verificadorUsado = 5;
-        if (verificadorUsado == 0)
-        {
+        if (coluna[i][1] >= m || coluna[i][1] < 0)
+            verificadorUsado = 1;
+
+        
+        if (verificadorUsado == 0){
             linhaUsada[i][0] = linha[i][0];   // linha usada
             linhaUsada[i][1] = linha[i][1];   // linha final eh a mesma
             colunaUsada[i][0] = coluna[i][0]; // coluna usada inicial
@@ -363,7 +390,6 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
                 else // para esquerda
                     matriz[linha[i][0]][coluna[i][0] - k] = palavras[i][k];
             }
-
             break;
         }
     }
@@ -386,6 +412,17 @@ int vertical(char **palavras, int **linha, int **coluna, int n, int m, int *tama
 
         coluna[i][1] = coluna[i][0]; // ultima coluna usada pela string
 
+
+
+        for (int k = linha[i][0]; k <= coluna[i][1]; k++){
+            for(int p = colunaUsada[j][0]; p <= colunaUsada[j][1]; p++){
+                if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0] == linhaUsada[j][0]){
+                    verificadorUsado == 1;
+                    printf("caiu na regra nova\n");
+                }
+            }
+        }
+        
         // se cruzar com alguma palavra na horizontal
         if (coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1] && linha[i][0] <= linhaUsada[j][0] && linha[i][1] >= linhaUsada[j][0])
             verificadorUsado = 1;
@@ -394,17 +431,17 @@ int vertical(char **palavras, int **linha, int **coluna, int n, int m, int *tama
         {
 
             if (linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1]) // se estiver comecando dentro de alguma palavra usada
-                verificadorUsado = 2;
+                verificadorUsado = 1;
 
             if (linha[i][1] >= linhaUsada[j][0] && linha[i][1] <= linhaUsada[j][1]) // se estiver finalizando dentro de alguma palavra usada
-                verificadorUsado = 3;
+                verificadorUsado = 1;
 
             if ((n - linhaUsada[j][1]) < (tamanhoPalavras[i] - 1) && linhaUsada[j][0] < (tamanhoPalavras[i] - 1)) // se não tiver espaco depois da coluna ou antes
-                verificadorUsado = 4;
+                verificadorUsado = 1;
         }
 
         if (linha[i][1] > n || linha[i][1] < 0)
-            verificadorUsado = 5;
+            verificadorUsado = 1;
 
         if (verificadorUsado == 0)
         {
@@ -457,17 +494,17 @@ int diagonal(char **palavras, int **linha, int **coluna, int n, int m, int *tama
         {
 
             if (linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1]) // se estiver comecando dentro de alguma palavra usada
-                verificadorUsado = 2;
+                verificadorUsado = 1;
 
             if (linha[i][1] >= linhaUsada[j][0] && linha[i][1] <= linhaUsada[j][1]) // se estiver finalizando dentro de alguma palavra usada
-                verificadorUsado = 3;
+                verificadorUsado = 1;
 
             if ((n - linhaUsada[j][1]) < (tamanhoPalavras[i] - 1) && linhaUsada[j][0] < (tamanhoPalavras[i] - 1)) // se não tiver espaco depois da coluna ou antes
-                verificadorUsado = 4;
+                verificadorUsado = 1;
         }
 
         if (linha[i][1] > n || coluna[i][1] > m || linha[i][1] < 0 || coluna[i][1] < 0)
-            verificadorUsado = 5;
+            verificadorUsado = 1;
 
         if (verificadorUsado == 0)
         {
@@ -529,8 +566,7 @@ int main()
     char **matriz, **palavras;
     int **linhaUsada, **colunaUsada;
 
-    if (escolha == 1)
-    {                                                       // se for um novo jogo
+    if (escolha == 1){// se for um novo jogo
         fscanf(arq, "%d %d\n%d\n", &n, &m, &quantPalavras); // lendo as 3 primeiras linhas do dicionario
         palavras = fazMatrizChar(quantPalavras, 100, 1);    // criando uma matriz para as palavras
         int *tamanhoPalavras = malloc(quantPalavras);
@@ -555,10 +591,8 @@ int main()
         colunaUsada = fazMatrizInt(quantPalavras, 2);
         int **linha = fazMatrizInt(quantPalavras, 2), **coluna = fazMatrizInt(quantPalavras, 2), orientacao, verificadorUsado;
 
-        if (dificuldade == 1)
-        { // Dificuldade 1
-            for (int i = 0; i < quantPalavras; i++)
-            { // repetir todas as palavras
+        if (dificuldade == 1){ // Dificuldade 1
+            for (int i = 0; i < quantPalavras; i++){ // repetir todas as palavras
 
                 verificadorUsado = 0;
                 linhaUsada[i][0] = -5;    // inicializando com valores aletorios a linha inicial.
@@ -566,8 +600,7 @@ int main()
                 linhaUsada[i][1] = 1000;  // inicializando com valores aletorios a linha final.
                 colunaUsada[i][1] = 1000; // inicializando com valores aletorios a coluna final.
 
-                do
-                { // enquanto não achar um espaco, nao muda de palavra
+                do{ // enquanto não achar um espaco, nao muda de palavra
 
                     orientacao = (rand() % 2); // sorteando 0 ou 1 pra orientação
                     if (orientacao == 0)       // se orientacao for igual a zero, é horizontal
