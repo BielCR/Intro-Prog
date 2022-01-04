@@ -1,0 +1,19 @@
+12 10
+H t A J Q E Q N X F 
+L o t P A P Y Y C Q 
+S r r V D C E H W F 
+R n e N D N S K P C 
+C o j a n t a X T H 
+W c L L G W A G L K 
+W a D Y Y D F R I M 
+R s U J J V E D D P 
+L a A A M Y A V Z I 
+R M K O O M W M E D 
+U J D J M W z e r o 
+R F M Z X J X W Q Y 
+5
+casa 51 81
+torno 01 41
+trem 12 42
+zero 106 109
+janta 42 46
