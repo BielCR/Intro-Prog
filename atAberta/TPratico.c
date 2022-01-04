@@ -325,16 +325,16 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
         for (int k = coluna[i][0]; k <= coluna[i][1]; k++){//varrendo todas as colunas que a palavra ira ocupar com as cordenadas sorteadas
             for(int p = colunaUsada[j][0]; p <= colunaUsada[j][1]; p++){//varrendo todas as colunas que a palavra ja implementada "j" ocupa
 
-                if(linhaUsada[j][0] == linhaUsada[j][1]){ //se a palavra ja implementada estiver na posição horizontal
-                    if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0] == linhaUsada[j][0]){ //se a coluna sorteada for igual a coluna usada e a linha tammbem 
+                if(linhaUsada[j][0] == linhaUsada[j][1]){ //se a palavra ja implementada j estiver na posição horizontal
+                    if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0] == linhaUsada[j][0]){ //se a coluna sorteada for igual a coluna usada e a linha tambem 
                         verificadorUsado == 1; //atribui um numero aleatorio para a variavel verificadora
-                        printf("caiu na regra nova\n");
+                        printf("caiu na regra nova horizontal 1\n");
                     }
                 }else if(colunaUsada[j][0] == colunaUsada[j][1]){ //se a palavra ja implementada estiver na posição vertical
                     for(int s = linhaUsada[j][0]; s <= linhaUsada[j][1]; s++){ 
                         if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0] == linhaUsada[j][0]+s){
                             verificadorUsado == 1;
-                            printf("caiu na regra nova\n");
+                            printf("caiu na regra nova horizontal 2\n");
                         }
                     }
                 }else{//se a palavra ja implementada estiver na posição diagonal
@@ -342,7 +342,7 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
                         for(int t = linha[i][0]; t <= linha[i][1]; t++){ //varrendo as linhas da palavra
                             if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0]+t == linhaUsada[j][0]+s){
                                 verificadorUsado == 1;
-                                printf("caiu na regra nova\n");
+                                printf("caiu na regra nova horizontal 3\n");
                             }
                         }
                     }
@@ -350,6 +350,7 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
             }
         }
 
+        /*
         // se crusar com uma palvra na vertical
         if (linha[i][0] >= linhaUsada[j][0] && linha[i][0] <= linhaUsada[j][1] && coluna[i][0] <= colunaUsada[j][0] && coluna[i][1] >= colunaUsada[j][0])
             verificadorUsado = 1;
@@ -375,7 +376,7 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
 
         if (coluna[i][1] >= m || coluna[i][1] < 0)
             verificadorUsado = 1;
-
+        */
         
         if (verificadorUsado == 0){
             linhaUsada[i][0] = linha[i][0];   // linha usada
@@ -402,8 +403,8 @@ int vertical(char **palavras, int **linha, int **coluna, int n, int m, int *tama
     { // verificando se já foi usado a coluna ou a linha
 
         verificadorUsado = 0;
-        linha[i][0] = (rand() % (n - 1)); // a linha não deve estar mais proxima da borda do que o tamanho da palavra
-        coluna[i][0] = (rand() % (m - 1));
+        linha[i][0] = (rand() % n ); // a linha não deve estar mais proxima da borda do que o tamanho da palavra
+        coluna[i][0] = (rand() % m );
 
         if (dir == 1)
             linha[i][1] = linha[i][0] + tamanhoPalavras[i] - 1; // ultima linha usada pela string
@@ -414,11 +415,30 @@ int vertical(char **palavras, int **linha, int **coluna, int n, int m, int *tama
 
 
 
-        for (int k = linha[i][0]; k <= coluna[i][1]; k++){
-            for(int p = colunaUsada[j][0]; p <= colunaUsada[j][1]; p++){
-                if(coluna[i][0]+k == colunaUsada[j][0]+p && linha[i][0] == linhaUsada[j][0]){
-                    verificadorUsado == 1;
-                    printf("caiu na regra nova\n");
+        for (int k = linha[i][0]; k <= linha[i][1]; k++){//varrendo todas as linhas que a palavra ira ocupar com as cordenadas sorteadas
+            for(int p = linhaUsada[j][0]; p <= linhaUsada[j][1]; p++){//varrendo todas as linhas que a palavra ja implementada "j" ocupa
+
+                if(colunaUsada[j][0] == colunaUsada[j][1]){ //se a palavra ja implementada j estiver na posição vertical
+                    if(linha[i][0]+k == linhaUsada[j][0]+p && coluna[i][0] == colunaUsada[j][0]){ //se a coluna sorteada for igual a coluna usada e a linha tambem 
+                        verificadorUsado == 1; //atribui um numero aleatorio para a variavel verificadora
+                        printf("caiu na regra nova vertical 1\n");
+                    }
+                }else if(linhaUsada[j][0] == linhaUsada[j][1]){ //se a palavra ja implementada estiver na posição horizontal
+                    for(int s = colunaUsada[j][0]; s <= colunaUsada[j][1]; s++){ 
+                        if(linha[i][0]+k == linhaUsada[j][0]+p && coluna[i][0] == colunaUsada[j][0]+s){
+                            verificadorUsado == 1;
+                            printf("caiu na regra nova vertical 2\n");
+                        }
+                    }
+                }else{//se a palavra ja implementada estiver na posição diagonal
+                    for(int s = colunaUsada[j][0]; s <= colunaUsada[j][1]; s++){ //varrendo todas as colunas já implementadas
+                        for(int t = coluna[i][0]; t <= coluna[i][1]; t++){ //varrendo as colunas da palavra
+                            if(linha[i][0]+k == linhaUsada[j][0]+p && coluna[i][0]+t == coluna[j][0]+s){
+                                verificadorUsado == 1;
+                                printf("caiu na regra nova vertical 3\n");
+                            }
+                        }
+                    }
                 }
             }
         }
