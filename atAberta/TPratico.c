@@ -308,7 +308,7 @@ int **fazMatrizInt(int n, int m)
 
 int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *tamanhoPalavras, int i, int **linhaUsada, int **colunaUsada, char **matriz, int dir){
     int verificadorUsado;
-    for (int j = 0; j <= i; j++){
+    for (int j = 0; j <= i; j++){ // varrer as palavras ja sorteadas
         verificadorUsado = 0;
         linha[i][0] = (rand() % n);
         coluna[i][0] = (rand() % m); // a coluna não deve estar mais proxima da borda do que o tamanho da palavra
@@ -319,7 +319,7 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
             coluna[i][1] = coluna[i][0] - tamanhoPalavras[i] + 1; // ultima coluna usada pela string para esquerda
 
         if (linhaUsada[j][0] <= linha[i][0] && (coluna[i][0] - colunaUsada[j][0]) <= tamanhoPalavras[i])
-            verificadorUsado = 7;
+            verificadorUsado = 1;
 
 
         for (int k = coluna[i][0]; k <= coluna[i][1]; k++){//varrendo todas as colunas que a palavra ira ocupar com as cordenadas sorteadas
@@ -349,6 +349,8 @@ int horizontal(char **palavras, int **linha, int **coluna, int n, int m, int *ta
                 }
             }
         }
+        if (coluna[i][1] >= m || coluna[i][1] < 0)
+            verificadorUsado = 1;
 
         /*
         // se crusar com uma palvra na vertical
@@ -473,9 +475,9 @@ int vertical(char **palavras, int **linha, int **coluna, int n, int m, int *tama
             for (int k = 0; k < tamanhoPalavras[i]; k++)
             {
                 if (dir == 1)                                               // se for para cima
-                    matriz[linha[i][0] + k][coluna[i][0]] = palavras[i][k]; // colocando as string na matriz para cima
+                    matriz[linha[i][0] + k][coluna[i][0]] =  toupper(palavras[i][k]); // colocando as string na matriz para cima
                 else                                                        // para baixo
-                    matriz[linha[i][0] - k][coluna[i][0]] = palavras[i][k]; // colocando as string na matriz para baixo
+                    matriz[linha[i][0] - k][coluna[i][0]] =  toupper(palavras[i][k]); // colocando as string na matriz para baixo
             }
             break;
         }
@@ -488,7 +490,7 @@ int diagonal(char **palavras, int **linha, int **coluna, int n, int m, int *tama
     for (int j = 0; j <= i; j++)
     { // verificando se já foi usado a coluna ou a linha
 
-        verificadorUsado = 0;
+        
         linha[i][0] = (rand() % n); // a linha não deve estar mais proxima da borda do que o tamanho da palavra
         coluna[i][0] = (rand() % m);
         if (dir == 1)
@@ -502,6 +504,7 @@ int diagonal(char **palavras, int **linha, int **coluna, int n, int m, int *tama
             coluna[i][1] = coluna[i][0] - tamanhoPalavras[i] + 1; // ultima coluna usada pela string
         }
 
+        verificadorUsado = 0;
         // se cruzar com alguma palavra na horizontal
         if (coluna[i][0] >= colunaUsada[j][0] && coluna[i][0] <= colunaUsada[j][1] && linha[i][0] <= linhaUsada[j][0] && linha[i][1] >= linhaUsada[j][0])
             verificadorUsado = 1;
@@ -536,9 +539,9 @@ int diagonal(char **palavras, int **linha, int **coluna, int n, int m, int *tama
             for (int k = 0; k < tamanhoPalavras[i]; k++)
             {
                 if (dir == 1)                                                   // para direita baixo
-                    matriz[linha[i][0] + k][coluna[i][0] + k] = palavras[i][k]; // colocando as string na matriz
+                    matriz[linha[i][0] + k][coluna[i][0] + k] = toupper(palavras[i][k]); // colocando as string na matriz
                 else                                                            // para esquerda cima
-                    matriz[linha[i][0] - k][coluna[i][0] - k] = palavras[i][k]; // colocando as string na matriz
+                    matriz[linha[i][0] - k][coluna[i][0] - k] = toupper(palavras[i][k]); // colocando as string na matriz
             }
             break;
         }
@@ -581,20 +584,20 @@ int main()
         }
     } while (escolha != 1 && escolha != 2);
 
-    FILE *arq = fopen(nome, "r"); // abrindo um arquivo pra leitura
+    FILE *arquivo = fopen(nome, "r"); // abrindo um arquivo pra leitura
     int n = 0, m = 0, quantPalavras = 0;
     char **matriz, **palavras;
     int **linhaUsada, **colunaUsada;
 
     if (escolha == 1){// se for um novo jogo
-        fscanf(arq, "%d %d\n%d\n", &n, &m, &quantPalavras); // lendo as 3 primeiras linhas do dicionario
+        fscanf(arquivo, "%d %d\n%d\n", &n, &m, &quantPalavras); // lendo as 3 primeiras linhas do dicionario
         palavras = fazMatrizChar(quantPalavras, 100, 1);    // criando uma matriz para as palavras
         int *tamanhoPalavras = malloc(quantPalavras);
 
         // lendo o restante das palvras
         for (int i = 0; i < quantPalavras; i++)
         {
-            fscanf(arq, "%s\n", palavras[i]);
+            fscanf(arquivo, "%s\n", palavras[i]);
             tamanhoPalavras[i] = (strlen(palavras[i]));
         }
 
@@ -692,6 +695,22 @@ int main()
             }
         }
     }
+    if(escolha == 2){ //se for para continuar um jogo
+        fscanf(arquivo, "%d %d\n", &n, &m); //le as dimencoes da matriz
+        matriz = fazMatrizChar(n, m, 2); //cria a matriz
+        for(int o = 0; o < n; o++){//le os caracteres do arquivo e coloca na matriz
+            for(int p = 0; p < m; p++)
+                fscanf(arquivo, "%c ", &matriz[o][p]);
+        }
+
+        fscanf(arquivo, "\n%d", &quantPalavras); // le a quantidade de palavras
+        palavras = fazMatrizChar(quantPalavras, 100, 1); //criando matriz pra armazenar as palavras
+    
+        for(int i = 0; i<quantPalavras; i++){
+            fscanf(arquivo, "%s %d %d %d %d", palavras[i], &linhaUsada[i][0], &colunaUsada[i][0], &linhaUsada[i][1], &colunaUsada[i][1]);
+        }
+        fclose(arquivo);
+    }
 
     printf("\n");
 
@@ -717,14 +736,15 @@ int main()
         printf("\n");
     }
 
+    int*corretos = malloc(quantPalavras);
     do
     {
+        
         printf("\n\nPara jogar digite os seguinte comandos:\n\n\"marcar\".\n\"salvar jogo.txt\" (digite o nome do arquivo apos o comando para salvar.\n\"resolver\" (exibe as palavras marcadas).\n\"sair\" (para sair do jogo).\n");
         scanf("%s", comando);
         finaliza(comando); // finaliza se for digitado o comando de sair
 
-        if (strcmp(comando, "marcar") == 0)
-        { // comando de marcar palavra
+        if (strcmp(comando, "marcar") == 0){ // comando de marcar palavra
 
             // lendo as posicoes
             printf("Voce tem %d tentativas!\n", (quantPalavras - cont));
@@ -766,9 +786,12 @@ int main()
                                         textcolor(CN_NORMAL, 2 | CN_BRIGHT, CN_NO_COLOR);
                                         printf("%c ", matriz[j][k]);
                                         textcolor(CN_NORMAL, CN_NO_COLOR, CN_NO_COLOR);
+                                        corretos[cont] = 1;
                                     }
-                                    else
+                                    else{
+                                        corretos[cont] = 0;
                                         printf("%c ", matriz[j][k]);
+                                    }
                                 }
                                 printf("\n");
                             }
@@ -793,9 +816,12 @@ int main()
                                         textcolor(CN_NORMAL, 2 | CN_BRIGHT, CN_NO_COLOR);
                                         printf("%c ", matriz[j][k]);
                                         textcolor(CN_NORMAL, CN_NO_COLOR, CN_NO_COLOR);
+                                        corretos[cont] = 1;
                                     }
-                                    else
+                                    else{
+                                        corretos[cont] = 0;
                                         printf("%c ", matriz[j][k]);
+                                    }
                                 }
                                 printf("\n");
                             }
@@ -827,9 +853,12 @@ int main()
                                             textcolor(CN_NORMAL, 2 | CN_BRIGHT, CN_NO_COLOR);
                                             printf("%c ", matriz[j][k]);
                                             textcolor(CN_NORMAL, CN_NO_COLOR, CN_NO_COLOR);
+                                            corretos[cont] = 1;
                                         }
-                                        else
+                                        else{
                                             printf("%c ", matriz[j][k]);
+                                            corretos[cont] = 0;
+                                        }
                                     }
                                     printf("\n");
                                 }
@@ -854,9 +883,12 @@ int main()
                                             textcolor(CN_NORMAL, 2 | CN_BRIGHT, CN_NO_COLOR);
                                             printf("%c ", matriz[j][k]);
                                             textcolor(CN_NORMAL, CN_NO_COLOR, CN_NO_COLOR);
+                                            corretos[cont] = 1;
                                         }
-                                        else
+                                        else{
+                                            corretos[cont] = 0;
                                             printf("%c ", matriz[j][k]);
+                                        }
                                     }
                                     printf("\n");
                                 }
@@ -884,9 +916,12 @@ int main()
                                             textcolor(CN_NORMAL, 2 | CN_BRIGHT, CN_NO_COLOR);
                                             printf("%c ", matriz[j][k]);
                                             textcolor(CN_NORMAL, CN_NO_COLOR, CN_NO_COLOR);
+                                            corretos[cont] = 1;
                                         }
-                                        else
+                                        else{
+                                            corretos[cont] = 0;
                                             printf("%c ", matriz[j][k]);
+                                        }
                                     }
                                     printf("\n");
                                 }
@@ -911,9 +946,12 @@ int main()
                                             textcolor(CN_NORMAL, 2 | CN_BRIGHT, CN_NO_COLOR);
                                             printf("%c ", matriz[j][k]);
                                             textcolor(CN_NORMAL, CN_NO_COLOR, CN_NO_COLOR);
+                                            corretos[cont] = 1;
                                         }
-                                        else
+                                        else{
+                                            corretos[cont] = 1;
                                             printf("%c ", matriz[j][k]);
+                                        }
                                     }
                                     printf("\n");
                                 }
@@ -942,13 +980,15 @@ int main()
             for (int i = 0; i < quantPalavras; i++)
             {
                 fprintf(file, "%s ", palavras[i]);
-                fprintf(file, "%d%d %d%d", linhaUsada[i][0], colunaUsada[i][0], linhaUsada[i][1], colunaUsada[i][1]);
+                fprintf(file, "%d %d %d %d", linhaUsada[i][0], colunaUsada[i][0], linhaUsada[i][1], colunaUsada[i][1]);
 
                 fprintf(file, "\n");
             }
         }
-        if (strcmp(comando, "resolver") == 0)
-        {
+        if (strcmp(comando, "resolver") == 0){
+            printf("\n\nPalavras: ");
+            for(int i = 0; i< quantPalavras; i++)
+                corretos[i] == 1 ? printf("\n%s - ENCONTRADA", palavras[i]) : printf("\n%s - NAO ENCONTRADA", palavras[i]);
         }
 
     } while (strcmp(comando, "sair") != 0);
